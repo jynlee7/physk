@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ experiment_name }}</h2>
+
+{% if experiment_name == "Projectile Motion" %}
+    <form method="POST">
+        <label for="v0">Initial Velocity (m/s):</label>
+        <input type="number" id="v0" name="v0" step="any" required>
+        
+        <label for="angle">Launch Angle (degrees):</label>
+        <input type="number" id="angle" name="angle" step="any" required>
+        
+        <label for="t_end">Time of Flight (s):</label>
+        <input type="number" id="t_end" name="t_end" step="any" required>
+        
+        <button type="submit">Run Experiment</button>
+    </form>
+{% elif experiment_name == "Pendulum Simulation" %}
+    <form method="POST">
+        <label for="theta0">Initial Angle (degrees):</label>
+        <input type="number" id="theta0" name="theta0" step="any" required>
+        
+        <label for="L">Pendulum Length (m):</label>
+        <input type="number" id="L" name="L" step="any" required>
+        
+        <button type="submit">Run Experiment</button>
+    </form>
+{% endif %}
+
+{% if img_data %}
+    <h3>Result:</h3>
+    <img src="data:image/png;base64,{{ img_data }}" alt="{{ experiment_name }} Graph">
+{% elif error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+{% endblock %}
