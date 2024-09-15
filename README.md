@@ -35,3 +35,6 @@ Then open your browser and go to `http://127.0.0.1:5000/`.
 ## Experiments
 - **Projectile Motion**: Visualize the motion of a projectile based on initial velocity and angle.
 - **Pendulum Simulation**: Simulate a simple pendulum's motion using differential equations.
+- **SHM Simulation**: Visualize the motion of a projectile based on initial velocity and angle.
+- **Electric Field Simulation**: Simulate a simple pendulum's motion using differential equations.
+- **Lens Optics Simulation**: Visualize the motion of a projectile based on initial velocity and angle.
