@@ -26,6 +26,39 @@
         
         <button type="submit">Run Experiment</button>
     </form>
+{% elif experiment_name == "Simple Harmonic Motion" %}
+    <form method="POST">
+        <label for="mass">Mass (kg):</label>
+        <input type="number" id="mass" name="mass" step="any" required>
+        
+        <label for="k">Spring Constant (N/m):</label>
+        <input type="number" id="k" name="k" step="any" required>
+        
+        <label for="time">Time (s):</label>
+        <input type="number" id="time" name="time" step="any" required>
+        
+        <button type="submit">Run Experiment</button>
+    </form>
+{% elif experiment_name == "Electric Field Simulation" %}
+    <form method="POST">
+        <label for="charge">Charge (C):</label>
+        <input type="number" id="charge" name="charge" step="any" required>
+        
+        <label for="distance">Max Distance (m):</label>
+        <input type="number" id="distance" name="distance" step="any" required>
+        
+        <button type="submit">Run Experiment</button>
+    </form>
+{% elif experiment_name == "Lens Optics Simulation" %}
+    <form method="POST">
+        <label for="focal_length">Focal Length (m):</label>
+        <input type="number" id="focal_length" name="focal_length" step="any" required>
+        
+        <label for="object_distance">Object Distance (m):</label>
+        <input type="number" id="object_distance" name="object_distance" step="any" required>
+        
+        <button type="submit">Run Experiment</button>
+    </form>
 {% endif %}
 
 {% if img_data %}
