@@ -1,0 +1,5 @@
+from .projectile_motion import simulate_projectile_motion
+from .pendulum_simulation import simulate_pendulum
+from .shm_simulation import simulate_shm
+from .electric_field_simulation import simulate_electric_field
+from .lens_optics_simulation import simulate_lens_optics
