@@ -22,3 +22,17 @@ footer {
     background-color: #333;
     color: white;
 }
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.error {
+    color: red;
+}

@@ -1,110 +1,51 @@
 from flask import Flask, render_template, request
-import io
-import base64
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from experiments.projectile_motion import projectile_motion
-from experiments.pendulum_simulation import pendulum
-from experiments.shm_simulation import shm
-from experiments.electric_field_simulation import electric_field
-from experiments.lens_optics_simulation import lens_optics
+from simulations.electric_field_simulation import simulate_electric_field
+from simulations.lens_optics_simulation import simulate_lens_optics
+from simulations.pendulum_simulation import simulate_pendulum
+from simulations.projectile_motion import simulate_projectile_motion
+from simulations.shm_simulation import simulate_shm
+
 
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('home.html')
 
-# Projectile Motion
-@app.route('/projectile', methods=['GET', 'POST'])
-def projectile():
+@app.route('/experiment/<string:experiment_name>', methods=['GET', 'POST'])
+def experiment(experiment_name):
     if request.method == 'POST':
-        try:
+        dimension = request.form.get('dimension')
+
+        # Handle 3D Simulation
+        if dimension == '3D':
+            return render_template('experiment.html', exp_name=experiment_name, dimension="3D")
+
+        # Handle 2D Simulations (existing logic for 2D)
+        # Add the corresponding 2D simulation code
+        if experiment_name == 'Projectile Motion':
             v0 = float(request.form['v0'])
             angle = float(request.form['angle'])
             t_end = float(request.form['t_end'])
-
-            fig = projectile_motion(v0, angle, t_end)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            img_data = base64.b64encode(output.getvalue()).decode('utf-8')
-            return render_template('experiment.html', experiment_name="Projectile Motion", img_data=img_data)
-        except ValueError:
-            return render_template('experiment.html', experiment_name="Projectile Motion", error="Invalid input.")
-    
-    return render_template('experiment.html', experiment_name="Projectile Motion")
-
-# Pendulum Simulation
-@app.route('/pendulum', methods=['GET', 'POST'])
-def pendulum_sim():
-    if request.method == 'POST':
-        try:
+            img_data, stats = simulate_projectile_motion(v0, angle, t_end)
+        elif experiment_name == 'Pendulum':
+            length = float(request.form['length'])
             theta0 = float(request.form['theta0'])
-            L = float(request.form['L'])
-
-            fig = pendulum(theta0, L)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            img_data = base64.b64encode(output.getvalue()).decode('utf-8')
-            return render_template('experiment.html', experiment_name="Pendulum Simulation", img_data=img_data)
-        except ValueError:
-            return render_template('experiment.html', experiment_name="Pendulum Simulation", error="Invalid input.")
-    
-    return render_template('experiment.html', experiment_name="Pendulum Simulation")
-
-# Simple Harmonic Motion (SHM)
-@app.route('/shm', methods=['GET', 'POST'])
-def shm_sim():
-    if request.method == 'POST':
-        try:
-            mass = float(request.form['mass'])
+            img_data, stats = simulate_pendulum(length, theta0)
+        elif experiment_name == 'Simple Harmonic Motion':
             k = float(request.form['k'])
-            time = float(request.form['time'])
-
-            fig = shm(mass, k, time)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            img_data = base64.b64encode(output.getvalue()).decode('utf-8')
-            return render_template('experiment.html', experiment_name="Simple Harmonic Motion", img_data=img_data)
-        except ValueError:
-            return render_template('experiment.html', experiment_name="Simple Harmonic Motion", error="Invalid input.")
-    
-    return render_template('experiment.html', experiment_name="Simple Harmonic Motion")
-
-# Electric Field Simulation
-@app.route('/electric_field', methods=['GET', 'POST'])
-def electric_field_sim():
-    if request.method == 'POST':
-        try:
-            charge = float(request.form['charge'])
-            distance = float(request.form['distance'])
-
-            fig = electric_field(charge, distance)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            img_data = base64.b64encode(output.getvalue()).decode('utf-8')
-            return render_template('experiment.html', experiment_name="Electric Field Simulation", img_data=img_data)
-        except ValueError:
-            return render_template('experiment.html', experiment_name="Electric Field Simulation", error="Invalid input.")
-    
-    return render_template('experiment.html', experiment_name="Electric Field Simulation")
-
-# Lens Optics Simulation
-@app.route('/lens_optics', methods=['GET', 'POST'])
-def lens_optics_sim():
-    if request.method == 'POST':
-        try:
+            m = float(request.form['m'])
+            x0 = float(request.form['x0'])
+            img_data, stats = simulate_shm(k, m, x0)
+        elif experiment_name == 'Electric Field':
+            q1 = float(request.form['q1'])
+            q2 = float(request.form['q2'])
+            img_data, stats = simulate_electric_field(q1, q2)
+        elif experiment_name == 'Lens Optics':
             focal_length = float(request.form['focal_length'])
-            object_distance = float(request.form['object_distance'])
+            img_data, stats = simulate_lens_optics(focal_length)
 
-            fig = lens_optics(focal_length, object_distance)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            img_data = base64.b64encode(output.getvalue()).decode('utf-8')
-            return render_template('experiment.html', experiment_name="Lens Optics Simulation", img_data=img_data)
-        except ValueError:
-            return render_template('experiment.html', experiment_name="Lens Optics Simulation", error="Invalid input.")
-    
-    return render_template('experiment.html', experiment_name="Lens Optics Simulation")
+    return render_template('experiment.html', exp_name=experiment_name)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
